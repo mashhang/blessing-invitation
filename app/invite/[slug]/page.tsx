@@ -10,11 +10,14 @@ export const metadata: Metadata = {
 // Define the correct props for an async Server Component page.
 // The `params` must be awaited.
 type GuestPageProps = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 export default async function GuestPage({ params }: GuestPageProps) {
+  // Await the params to get the resolved object
+  const resolvedParams = await params;
+
   // Now you can safely pass the slug to your client component
   // which will handle all the client-side logic.
-  return <GuestInvitation slug={params.slug} />;
+  return <GuestInvitation slug={resolvedParams.slug} />;
 }
