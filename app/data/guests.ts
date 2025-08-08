@@ -5,8 +5,10 @@ export type Guest = {
 };
 
 export const guests: Guest[] = [
-  { id: "1", name: "Uncle John", slug: "john" },
-  { id: "2", name: "Aunt Mary", slug: "mary" },
-  { id: "3", name: "Uncle Paul", slug: "paul" },
-  { id: "4", name: "Aunt Jane", slug: "jane" },
+  { id: "1", name: "Uncle Paul", slug: "paul" },
+  { id: "2", name: "Uncle Ziv", slug: "ziv" },
+  { id: "3", name: "Uncle Renzo", slug: "renzo" },
+  { id: "4", name: "Uncle Bitoy", slug: "bitoy" },
+  { id: "5", name: "Aunt Angelika", slug: "angelika" },
+  { id: "6", name: "Aunt Angelika", slug: "angelika" },
 ];
