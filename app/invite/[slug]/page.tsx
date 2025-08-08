@@ -7,12 +7,6 @@ import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { type Metadata } from "next";
 
-type Props = {
-  params: {
-    slug: string;
-  };
-};
-
 export default function GuestPage({ params }: { params: { slug: string } }) {
   const guest = guests.find((g) => g.slug === params.slug);
   if (!guest) return notFound();
