@@ -31,10 +31,17 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
   }, []);
 
   // Variant for the fade-in animation
+  // The transition is part of the 'visible' state, not a top-level property.
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   };
+
+  // Create variants for each element with a custom delay
+  const fadeInWithDelay = (delay: number) => ({
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: delay } },
+  });
 
   return (
     <main
@@ -156,7 +163,7 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
         <motion.div
           initial="hidden"
           animate="visible"
-          variants={{ ...fadeIn, transition: { delay: 0.2 } }}
+          variants={fadeInWithDelay(0.2)} // The corrected syntax
           className="relative w-48 h-48 mx-auto mb-8 bg-blue-100 rounded-full border-4 border-blue-200 overflow-hidden shadow-lg"
         >
           <img
@@ -170,7 +177,7 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
         <motion.div
           initial="hidden"
           animate="visible"
-          variants={{ ...fadeIn, transition: { delay: 0.4 } }}
+          variants={fadeInWithDelay(0.4)} // The corrected syntax
           className="text-lg text-blue-800 mb-8 space-y-2"
         >
           <p className="font-semibold text-2xl">August 31 | 9 am</p>
@@ -184,7 +191,7 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
         <motion.div
           initial="hidden"
           animate="visible"
-          variants={{ ...fadeIn, transition: { delay: 0.6 } }}
+          variants={fadeInWithDelay(0.6)} // The corrected syntax
         >
           <RSVPButtons guest={guest} />
         </motion.div>
