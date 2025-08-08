@@ -31,7 +31,6 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
   }, []);
 
   // Variant for the fade-in animation
-  // The transition is part of the 'visible' state, not a top-level property.
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
@@ -43,116 +42,141 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: delay } },
   });
 
+  // Data for decorative elements
+  const decorations = [
+    {
+      type: "cloud",
+      emoji: "☁️",
+      size: "text-8xl",
+      top: "-20px",
+      left: "-40px",
+      opacity: "opacity-70",
+      animation: "",
+    },
+    {
+      type: "cloud",
+      emoji: "☁️",
+      size: "text-6xl",
+      top: "30%",
+      right: "0%",
+      opacity: "opacity-50",
+      animation: "animate-float-delay",
+    },
+    {
+      type: "cloud",
+      emoji: "☁️",
+      size: "text-5xl",
+      top: "50%",
+      left: "5%",
+      opacity: "opacity-60",
+      animation: "animate-float-alt",
+    },
+    {
+      type: "cloud",
+      emoji: "☁️",
+      size: "text-9xl",
+      bottom: "-40px",
+      right: "-60px",
+      opacity: "opacity-70",
+      animation: "",
+    },
+    {
+      type: "balloon",
+      top: "10%",
+      right: "8%",
+      animation: "animate-float",
+      fill: "#FFD700",
+      stroke: "#FFA500",
+    },
+    {
+      type: "balloon",
+      bottom: "15%",
+      left: "10%",
+      animation: "animate-float-delay",
+      fill: "#C0C0C0",
+      stroke: "#808080",
+    },
+  ];
+
+  const BalloonSVG = ({ fill, stroke }: { fill?: string; stroke?: string }) => (
+    <svg
+      width="40"
+      height="60"
+      viewBox="0 0 40 60"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <filter
+          id="balloon-shadow"
+          x="0"
+          y="0"
+          width="40"
+          height="60"
+          filterUnits="userSpaceOnUse"
+        >
+          <feDropShadow
+            dx="1"
+            dy="1"
+            stdDeviation="1"
+            floodColor="#000000"
+            floodOpacity="0.2"
+          />
+        </filter>
+      </defs>
+      <path
+        d="M20 5C10.6112 5 3 12.6112 3 22C3 31.3888 10.6112 42.5 20 55C29.3888 42.5 37 31.3888 37 22C37 12.6112 29.3888 5 20 5Z"
+        fill={fill}
+        stroke={stroke}
+        strokeWidth="1"
+        filter="url(#balloon-shadow)"
+      />
+      <path d="M20 55L20 60" stroke={stroke} strokeWidth="1" />
+    </svg>
+  );
+
   return (
     <main
-      className="relative min-h-screen bg-blue-50 flex flex-col items-center justify-center px-4 pt-10 pb-10 overflow-hidden text-center"
+      className="relative min-h-screen bg-blue-50 flex flex-col items-center justify-center px-4 py-8 overflow-hidden text-center"
       style={{ fontFamily: "'Inter', sans-serif" }}
     >
-      {/* Decorative elements: clouds and hot air balloons */}
+      {/* Decorative elements: clouds and balloons */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-20">
-        {/* Top-left cloud */}
-        <div className="absolute top-[-20px] left-[-40px] text-8xl text-blue-200 opacity-70 z-20">
-          ☁️
-        </div>
-        {/* Top-right hot air balloon */}
-        <div className="absolute top-10 right-8 animate-float z-20">
-          <svg
-            width="60"
-            height="90"
-            viewBox="0 0 60 90"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="hot-air-balloon"
+        {decorations.map((item, i) => (
+          <motion.div
+            key={i}
+            className={`absolute ${item.size} ${item.opacity} ${item.animation} z-20`}
+            style={{
+              top: item.top,
+              bottom: item.bottom,
+              left: item.left,
+              right: item.right,
+            }}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5 + i * 0.1, duration: 0.8 }}
           >
-            <path
-              d="M30 0C13.4315 0 0 13.4315 0 30V50H60V30C60 13.4315 46.5685 0 30 0Z"
-              fill="#B3D9FF"
-              stroke="#60A5FA"
-              strokeWidth="2"
-            />
-            <rect x="25" y="50" width="10" height="5" fill="#60A5FA" />
-            <path
-              d="M25 55L20 80H40L35 55H25Z"
-              fill="#FDE047"
-              stroke="#F59E0B"
-              strokeWidth="2"
-            />
-            <circle cx="30" cy="85" r="5" fill="#60A5FA" />
-            <line
-              x1="25"
-              y1="55"
-              x2="20"
-              y2="80"
-              stroke="#60A5FA"
-              strokeWidth="2"
-            />
-            <line
-              x1="35"
-              y1="55"
-              x2="40"
-              y2="80"
-              stroke="#60A5FA"
-              strokeWidth="2"
-            />
-          </svg>
-        </div>
-        {/* Bottom-left hot air balloon */}
-        <div className="absolute bottom-20 left-10 animate-float-delay z-20">
-          <svg
-            width="60"
-            height="90"
-            viewBox="0 0 60 90"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="hot-air-balloon"
-          >
-            <path
-              d="M30 0C13.4315 0 0 13.4315 0 30V50H60V30C60 13.4315 46.5685 0 30 0Z"
-              fill="#B3D9FF"
-              stroke="#60A5FA"
-              strokeWidth="2"
-            />
-            <rect x="25" y="50" width="10" height="5" fill="#60A5FA" />
-            <path
-              d="M25 55L20 80H40L35 55H25Z"
-              fill="#FDE047"
-              stroke="#F59E0B"
-              strokeWidth="2"
-            />
-            <circle cx="30" cy="85" r="5" fill="#60A5FA" />
-            <line
-              x1="25"
-              y1="55"
-              x2="20"
-              y2="80"
-              stroke="#60A5FA"
-              strokeWidth="2"
-            />
-            <line
-              x1="35"
-              y1="55"
-              x2="40"
-              y2="80"
-              stroke="#60A5FA"
-              strokeWidth="2"
-            />
-          </svg>
-        </div>
-        {/* Bottom-right cloud */}
-        <div className="absolute bottom-[-40px] right-[-60px] text-9xl text-blue-200 opacity-70 z-20">
-          ☁️
-        </div>
+            {item.type === "cloud" ? (
+              item.emoji
+            ) : (
+              <BalloonSVG fill={item.fill} stroke={item.stroke} />
+            )}
+          </motion.div>
+        ))}
       </div>
 
       <div className="z-10 bg-white bg-opacity-80 backdrop-blur-sm p-8 md:p-12 rounded-3xl shadow-xl border border-blue-200 max-w-md w-full">
         {/* Main invitation content */}
         <motion.div initial="hidden" animate="visible" variants={fadeIn}>
-          <p className="text-xl text-blue-700 font-semibold mb-4">
+          {/* Reverting "Join us for the" to a simple, centered text */}
+          <p className="text-lg md:text-xl text-blue-700 font-semibold mb-4">
             Join us for the
           </p>
-          <h1 className="text-4xl text-blue-900 font-bold mb-2">Baptism of</h1>
+          <h1 className="text-3xl md:text-4xl text-blue-900 font-bold mb-2">
+            Baptism of
+          </h1>
           <h2
-            className="text-6xl text-blue-700 font-bold italic mb-6"
+            className="text-5xl md:text-6xl text-blue-700 font-bold italic mb-6"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             Kaiser Caleb
@@ -163,7 +187,7 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
         <motion.div
           initial="hidden"
           animate="visible"
-          variants={fadeInWithDelay(0.2)} // The corrected syntax
+          variants={fadeInWithDelay(0.2)}
           className="relative w-48 h-48 mx-auto mb-8 bg-blue-100 rounded-full border-4 border-blue-200 overflow-hidden shadow-lg"
         >
           <img
@@ -177,10 +201,10 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
         <motion.div
           initial="hidden"
           animate="visible"
-          variants={fadeInWithDelay(0.4)} // The corrected syntax
-          className="text-lg text-blue-800 mb-8 space-y-2"
+          variants={fadeInWithDelay(0.4)}
+          className="text-md md:text-lg text-blue-800 mb-8 space-y-2"
         >
-          <p className="font-semibold text-2xl">August 31 | 9 am</p>
+          <p className="font-semibold text-xl md:text-2xl">August 31 | 9 am</p>
           <p>
             Diocesan Shrine of Jesus in the Holy Sepulchre, Landayan, San Pedro,
             Philippines
@@ -191,7 +215,7 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
         <motion.div
           initial="hidden"
           animate="visible"
-          variants={fadeInWithDelay(0.6)} // The corrected syntax
+          variants={fadeInWithDelay(0.6)}
         >
           <RSVPButtons guest={guest} />
         </motion.div>
@@ -217,11 +241,23 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
             transform: translateY(10px) rotate(-2deg);
           }
         }
+        @keyframes float-alt {
+          0%,
+          100% {
+            transform: translateY(0) rotate(0deg);
+          }
+          50% {
+            transform: translateY(5px) rotate(-1deg);
+          }
+        }
         .animate-float {
           animation: float 5s ease-in-out infinite;
         }
         .animate-float-delay {
           animation: float-delay 6s ease-in-out infinite;
+        }
+        .animate-float-alt {
+          animation: float-alt 7s ease-in-out infinite;
         }
       `}</style>
     </main>

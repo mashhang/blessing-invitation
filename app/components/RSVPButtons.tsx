@@ -38,7 +38,7 @@ export default function RSVPButtons({ guest }: Props) {
     >
       <button
         onClick={handleToggle}
-        className={`px-6 py-3 rounded-full font-semibold text-lg transition shadow-md hover:shadow-lg duration-300 ${
+        className={`px-6 py-3 rounded-full font-semibold text-md md:text-lg transition shadow-md hover:shadow-lg duration-300 ${
           isGoing ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
         }`}
       >
