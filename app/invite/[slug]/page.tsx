@@ -5,9 +5,17 @@ import RSVPButtons from "@/app/components/RSVPButtons";
 import { notFound } from "next/navigation";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
-import { type Metadata } from "next";
+// Removed `Metadata` import since it's only for Server Components
 
-export default function GuestPage({ params }: { params: { slug: string } }) {
+// Define the correct props type for a Client Component page
+type GuestPageProps = {
+  params: {
+    slug: string;
+  };
+};
+
+// Use the defined props type
+export default function GuestPage({ params }: GuestPageProps) {
   const guest = guests.find((g) => g.slug === params.slug);
   if (!guest) return notFound();
 
