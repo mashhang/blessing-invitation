@@ -1,10 +1,20 @@
-import { guests } from "@/app/data/guests";
-import { notFound } from "next/navigation";
-import InvitationPage from "@/app/components/InviteCard"; // This will be a client component
+import GuestInvitation from "./GuestInvitation";
+import type { Metadata } from "next";
 
-export default function GuestPage({ params }: { params: { slug: string } }) {
-  const guest = guests.find((g) => g.slug === params.slug);
-  if (!guest) return notFound();
+// This is the correct way to handle Metadata in a Server Component
+export const metadata: Metadata = {
+  title: "Kaiser Caleb's Baptism Invitation",
+  description: "You're invited to the baptism of Kaiser Caleb.",
+};
 
-  return <InvitationPage guest={guest} />;
+// Define the correct props for a Server Component page
+type GuestPageProps = {
+  params: {
+    slug: string;
+  };
+};
+
+export default function GuestPage({ params }: GuestPageProps) {
+  // Pass the slug to the client component
+  return <GuestInvitation slug={params.slug} />;
 }
