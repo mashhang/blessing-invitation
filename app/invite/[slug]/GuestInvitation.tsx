@@ -3,8 +3,8 @@
 import { guests } from "@/app/data/guests";
 import RSVPButtons from "@/app/components/RSVPButtons";
 import { notFound } from "next/navigation";
-import { motion } from "framer-motion";
-import { useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
 
 // Define the props for this client component
 interface GuestInvitationProps {
@@ -78,6 +78,8 @@ interface BabyGrizzlyDecoration {
 export default function GuestInvitation({ slug }: GuestInvitationProps) {
   const guest = guests.find((g) => g.slug === slug);
   if (!guest) return notFound();
+
+  const [showReminder, setShowReminder] = useState(false);
 
   // Load Google Fonts dynamically for the new design
   useEffect(() => {
@@ -219,7 +221,7 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
         {decorations.map((item, i) => (
           <motion.div
             key={i}
-            className={`absolute ${item.animation} z-20 ${
+            className={`absolute ${item.animation} ${
               item.type === "cloud" ? `${item.size} ${item.opacity}` : ""
             } ${item.type === "grizzlywaving" ? `${item.size}` : ""} ${
               item.type === "grizzlywavingr" ? `${item.size}` : ""
@@ -315,7 +317,10 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
         >
           {/* passing mock guest data */}
           <RSVPButtons guest={guest} />
-          <button className="underline text-gray-400 text-xs mt-4 hover:text-gray-600 transition-colors">
+          <button
+            onClick={() => setShowReminder(true)}
+            className="underline text-gray-400 text-xs mt-4 hover:text-gray-600 transition-colors"
+          >
             Reminders
           </button>
         </motion.div>
@@ -360,6 +365,40 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
           animation: float-alt 7s ease-in-out infinite;
         }
       `}</style>
+
+      {/* Modal Popup */}
+      <AnimatePresence>
+        {showReminder && (
+          <motion.div
+            className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              className="bg-white p-6 rounded-2xl shadow-lg max-w-lg w-[90%] text-center z-50"
+            >
+              <h2 className="text-xl font-semibold mb-4">Reminder</h2>
+              <p className="text-gray-700 mb-6 text-sm">
+                This invitation is intended to confirm the attendance of guests
+                to ensure proper food allocation. Please be advised that guests
+                who responded “No” but still choose to attend on the said date
+                will be responsible for their own food and expenses. Thank you
+                for your understanding.
+              </p>
+              <button
+                onClick={() => setShowReminder(false)}
+                className="bg-[#FCC815] text-black px-5 py-2 rounded-lg hover:bg-[#e0b913] transition"
+              >
+                Close
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
