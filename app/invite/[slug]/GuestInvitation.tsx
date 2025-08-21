@@ -315,6 +315,9 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
         >
           {/* passing mock guest data */}
           <RSVPButtons guest={guest} />
+          <button className="underline text-gray-400 text-xs mt-4 hover:text-gray-600 transition-colors">
+            Reminders
+          </button>
         </motion.div>
       </div>
 
