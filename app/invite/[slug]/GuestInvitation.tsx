@@ -11,6 +11,70 @@ interface GuestInvitationProps {
   slug: string;
 }
 
+// Define types for the decorations to resolve the TypeScript error
+interface CloudDecoration {
+  type: "cloud";
+  emoji: string;
+  size: string;
+  top?: string;
+  bottom?: string;
+  left?: string;
+  right?: string;
+  opacity: string;
+  animation: string;
+}
+
+interface BalloonDecoration {
+  type: "balloon";
+  top?: string;
+  bottom?: string;
+  left?: string;
+  right?: string;
+  animation: string;
+  fill: string;
+  stroke: string;
+}
+
+interface BearDecoration {
+  type: "bear";
+  size: string;
+  top?: string;
+  bottom?: string;
+  left?: string;
+  right?: string;
+  animation: string;
+}
+
+interface GrizzlyWavingDecoration {
+  type: "grizzlywaving";
+  size: string;
+  top?: string;
+  bottom?: string;
+  left?: string;
+  right?: string;
+  animation: string;
+}
+
+interface GrizzlyWavingRDecoration {
+  type: "grizzlywavingr";
+  size: string;
+  top?: string;
+  bottom?: string;
+  left?: string;
+  right?: string;
+  animation: string;
+}
+
+interface BabyGrizzlyDecoration {
+  type: "babygrizzly";
+  size: string;
+  top?: string;
+  bottom?: string;
+  left?: string;
+  right?: string;
+  animation: string;
+}
+
 export default function GuestInvitation({ slug }: GuestInvitationProps) {
   const guest = guests.find((g) => g.slug === slug);
   if (!guest) return notFound();
@@ -43,62 +107,72 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
   });
 
   // Data for decorative elements
-  const decorations = [
+  const decorations: (
+    | CloudDecoration
+    | BalloonDecoration
+    | BearDecoration
+    | GrizzlyWavingDecoration
+    | GrizzlyWavingRDecoration
+    | BabyGrizzlyDecoration
+  )[] = [
     {
       type: "cloud",
       emoji: "☁️",
       size: "text-8xl",
-      top: "-20px",
-      left: "-40px",
+      top: "5%",
+      left: "-10px",
       opacity: "opacity-70",
       animation: "",
     },
     {
       type: "cloud",
       emoji: "☁️",
-      size: "text-6xl",
-      top: "30%",
-      right: "0%",
-      opacity: "opacity-50",
-      animation: "animate-float-delay",
+      size: "md:text-9xl text-7xl",
+      bottom: "12%",
+      right: "5%",
+      opacity: "opacity-70",
+      animation: "",
     },
     {
-      type: "cloud",
-      emoji: "☁️",
-      size: "text-5xl",
-      top: "50%",
+      type: "balloon",
+      top: "8%",
+      right: "8%",
+      animation: "animate-float",
+      fill: "#ffc0cb",
+      stroke: "#ff69b4",
+    },
+    {
+      type: "balloon",
+      top: "60%",
+      left: "8%",
+      animation: "animate-float-delay",
+      fill: "#ffe4b5",
+      stroke: "#daa520",
+    },
+    {
+      type: "grizzlywavingr",
+      bottom: "5%",
       left: "5%",
-      opacity: "opacity-60",
+      size: "w-24 h-24",
       animation: "animate-float-alt",
     },
     {
-      type: "cloud",
-      emoji: "☁️",
-      size: "text-9xl",
-      bottom: "-40px",
-      right: "-60px",
-      opacity: "opacity-70",
-      animation: "",
+      type: "grizzlywaving",
+      top: "24%",
+      right: "5%",
+      size: "w-16 h-16",
+      animation: "animate-float-alt",
     },
     {
-      type: "balloon",
-      top: "10%",
-      right: "8%",
-      animation: "animate-float",
-      fill: "#FFD700",
-      stroke: "#FFA500",
-    },
-    {
-      type: "balloon",
-      bottom: "15%",
-      left: "10%",
-      animation: "animate-float-delay",
-      fill: "#C0C0C0",
-      stroke: "#808080",
+      type: "babygrizzly",
+      top: "37%",
+      left: "20%",
+      size: "w-12 h-12",
+      animation: "animate-float-alt",
     },
   ];
 
-  const BalloonSVG = ({ fill, stroke }: { fill?: string; stroke?: string }) => (
+  const BalloonSVG = ({ fill, stroke }: { fill: string; stroke: string }) => (
     <svg
       width="40"
       height="60"
@@ -137,46 +211,67 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
 
   return (
     <main
-      className="relative min-h-screen bg-blue-50 flex flex-col items-center justify-center px-4 py-8 overflow-hidden text-center"
+      className="relative min-h-screen bg-[#F5E6D3] flex flex-col items-center justify-center px-4 pt-10 pb-10 overflow-hidden text-center"
       style={{ fontFamily: "'Inter', sans-serif" }}
     >
-      {/* Decorative elements: clouds and balloons */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-20">
+      {/* Decorative elements: clouds, balloons, and bears */}
+      <div className="absolute top-0 left-0 lg:w-[60%] lg:ml-90 w-full h-full pointer-events-none overflow-hidden z-20">
         {decorations.map((item, i) => (
           <motion.div
             key={i}
-            className={`absolute ${item.size} ${item.opacity} ${item.animation} z-20`}
+            className={`absolute ${item.animation} z-20 ${
+              item.type === "cloud" ? `${item.size} ${item.opacity}` : ""
+            } ${item.type === "grizzlywaving" ? `${item.size}` : ""} ${
+              item.type === "grizzlywavingr" ? `${item.size}` : ""
+            } ${item.type === "babygrizzly" ? `${item.size}` : ""}`}
             style={{
               top: item.top,
               bottom: item.bottom,
               left: item.left,
               right: item.right,
             }}
-            initial={{ opacity: 0, scale: 0.5 }}
+            initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.5 + i * 0.1, duration: 0.8 }}
           >
             {item.type === "cloud" ? (
               item.emoji
-            ) : (
+            ) : item.type === "balloon" ? (
               <BalloonSVG fill={item.fill} stroke={item.stroke} />
+            ) : item.type === "grizzlywaving" ? (
+              <img
+                src="/grizzlywaving.png"
+                alt="Placeholder for baby photo"
+                className="md:w-20 md:h-30 w-10 h-20 object-cover"
+              />
+            ) : item.type === "grizzlywavingr" ? (
+              <img
+                src="/grizzlywavingr.png"
+                alt="Placeholder for baby photo"
+                className="md:w-20 md:h-30 w-10 h-20 object-cover"
+              />
+            ) : item.type === "babygrizzly" ? (
+              <img
+                src="/babygrizzly.png"
+                alt="Placeholder for baby photo"
+                className="md:w-full md:h-full scale-120 w-full h-full object-cover"
+              />
+            ) : (
+              <></>
             )}
           </motion.div>
         ))}
       </div>
 
-      <div className="z-10 bg-white bg-opacity-80 backdrop-blur-sm p-8 md:p-12 rounded-3xl shadow-xl border border-blue-200 max-w-md w-full">
+      <div className="z-10 bg-[#FAF3EA] bg-opacity-80 backdrop-blur-sm p-8 md:p-12 rounded-3xl shadow-xl border border-[#D3C1AD] max-w-md w-full">
         {/* Main invitation content */}
         <motion.div initial="hidden" animate="visible" variants={fadeIn}>
-          {/* Reverting "Join us for the" to a simple, centered text */}
-          <p className="text-lg md:text-xl text-blue-700 font-semibold mb-4">
+          <p className="text-xl text-[#A37B5B] font-semibold mb-4">
             Join us for the
           </p>
-          <h1 className="text-3xl md:text-4xl text-blue-900 font-bold mb-2">
-            Baptism of
-          </h1>
+          <h1 className="text-4xl text-[#7A5B4C] font-bold mb-2">Baptism of</h1>
           <h2
-            className="text-5xl md:text-6xl text-blue-700 font-bold italic mb-6"
+            className="text-6xl text-[#A37B5B] font-bold italic mb-6"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             Kaiser Caleb
@@ -188,7 +283,7 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
           initial="hidden"
           animate="visible"
           variants={fadeInWithDelay(0.2)}
-          className="relative w-48 h-48 mx-auto mb-8 bg-blue-100 rounded-full border-4 border-blue-200 overflow-hidden shadow-lg"
+          className="relative w-48 h-48 mx-auto mb-8 bg-[#E9DED1] rounded-full border-4 border-[#D3C1AD] overflow-hidden shadow-lg"
         >
           <img
             src="/baby.jpg"
@@ -202,12 +297,13 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
           initial="hidden"
           animate="visible"
           variants={fadeInWithDelay(0.4)}
-          className="text-md md:text-lg text-blue-800 mb-8 space-y-2"
+          className="text-lg text-[#7A5B4C] mb-8 space-y-2"
         >
-          <p className="font-semibold text-xl md:text-2xl">August 31 | 9 am</p>
+          <p className="font-semibold text-2xl">August 31 | 9 am</p>
+          <p>📍San Pedro Apostol Parish</p>
           <p>
-            Diocesan Shrine of Jesus in the Holy Sepulchre, Landayan, San Pedro,
-            Philippines
+            Reception: Block 03 Lot 05 Rosa Homes Subdivision, Brgy. Landayan,
+            San Pedro, Laguna
           </p>
         </motion.div>
 
@@ -217,6 +313,7 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
           animate="visible"
           variants={fadeInWithDelay(0.6)}
         >
+          {/* passing mock guest data */}
           <RSVPButtons guest={guest} />
         </motion.div>
       </div>
