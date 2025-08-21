@@ -7,40 +7,30 @@ import confetti from "canvas-confetti";
 
 type Props = {
   guest: Guest;
+  rsvpStatus: "going" | "not_going";
+  onRSVP: (status: "going" | "not_going") => Promise<void>;
 };
 
-export default function RSVPButtons({ guest }: Props) {
-  const [response, setResponse] = useState<"going" | "not_going" | null>(null);
-
+export default function RSVPButtons({ guest, rsvpStatus, onRSVP }: Props) {
   const handleToggle = async () => {
-    const newResponse = response === "going" ? "not_going" : "going";
-    setResponse(newResponse);
-    console.log(`${guest.name} is ${newResponse}`);
+    const newResponse = rsvpStatus === "going" ? "not_going" : "going";
 
     try {
-      await fetch("/api/rsvp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          guestId: guest.id,
-          guestName: guest.name,
-          response: newResponse,
-        }),
-      });
+      await onRSVP(newResponse);
+
+      if (newResponse === "going") {
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
+      }
     } catch (err) {
       console.error("Failed to save RSVP", err);
     }
-
-    if (newResponse === "going") {
-      confetti({
-        particleCount: 150,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
-    }
   };
 
-  const isGoing = response === "going";
+  const isGoing = rsvpStatus === "going";
 
   return (
     <motion.div

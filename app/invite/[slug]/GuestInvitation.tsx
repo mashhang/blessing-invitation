@@ -5,6 +5,7 @@ import RSVPButtons from "@/app/components/RSVPButtons";
 import { notFound } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
 
 // Define the props for this client component
 interface GuestInvitationProps {
@@ -80,6 +81,33 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
   if (!guest) return notFound();
 
   const [showReminder, setShowReminder] = useState(false);
+
+  const [rsvpStatus, setRsvpStatus] = useState<"going" | "not_going">(
+    "not_going"
+  );
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    const storedStatus = localStorage.getItem(`rsvp-${guest.id}`);
+    if (storedStatus === "going" || storedStatus === "not_going") {
+      setRsvpStatus(storedStatus);
+    }
+  }, [guest.id]);
+
+  const handleRSVP = async (response: "going" | "not_going") => {
+    setRsvpStatus(response);
+
+    // Save to localStorage
+    localStorage.setItem(`rsvp-${guest.id}`, response);
+
+    // Save to Supabase
+    const { error } = await supabase.from("rsvps").upsert({
+      guest_id: guest.id,
+      guest_name: guest.name,
+      response: response,
+    });
+    if (error) console.error("Supabase RSVP error:", error.message);
+  };
 
   // Load Google Fonts dynamically for the new design
   useEffect(() => {
@@ -316,7 +344,11 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
           variants={fadeInWithDelay(0.6)}
         >
           {/* passing mock guest data */}
-          <RSVPButtons guest={guest} />
+          <RSVPButtons
+            guest={guest}
+            rsvpStatus={rsvpStatus}
+            onRSVP={handleRSVP}
+          />
           <button
             onClick={() => setShowReminder(true)}
             className="underline text-gray-400 text-xs mt-4 hover:text-gray-600 transition-colors"
