@@ -12,12 +12,25 @@ type Props = {
 export default function RSVPButtons({ guest }: Props) {
   const [response, setResponse] = useState<"going" | "not_going" | null>(null);
 
-  const handleToggle = () => {
+  const handleToggle = async () => {
     const newResponse = response === "going" ? "not_going" : "going";
     setResponse(newResponse);
     console.log(`${guest.name} is ${newResponse}`);
 
-    // 🎉 Trigger confetti only when going
+    try {
+      await fetch("/api/rsvp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          guestId: guest.id,
+          guestName: guest.name,
+          response: newResponse,
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to save RSVP", err);
+    }
+
     if (newResponse === "going") {
       confetti({
         particleCount: 150,
