@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import { FaInfoCircle } from "react-icons/fa";
 
 // Define the props for this client component
 interface GuestInvitationProps {
@@ -402,30 +403,55 @@ export default function GuestInvitation({ slug }: GuestInvitationProps) {
       <AnimatePresence>
         {showReminder && (
           <motion.div
-            className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+            className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 p-4 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              className="bg-white p-6 rounded-2xl shadow-lg max-w-lg w-[90%] text-center z-50"
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 50, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="relative bg-white/80 backdrop-blur-md border border-[#E5D4C0] p-8 rounded-3xl shadow-xl max-w-lg w-full text-center"
             >
-              <h2 className="text-xl font-semibold mb-4">Reminder</h2>
-              <p className="text-gray-700 mb-6 text-sm">
-                This invitation is intended to confirm the attendance of guests
-                to ensure proper food allocation. Please be advised that guests
-                who responded “No” but still choose to attend on the said date
-                will be responsible for their own food and expenses. Thank you
-                for your understanding.
-              </p>
+              {/* Close button */}
               <button
                 onClick={() => setShowReminder(false)}
-                className="bg-[#FCC815] text-black px-5 py-2 rounded-lg hover:bg-[#e0b913] transition"
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
               >
-                Close
+                ✕
+              </button>
+
+              {/* Icon */}
+              <div className="flex justify-center mb-4">
+                <div className="bg-[#F5E6D3] rounded-full p-4 shadow-inner">
+                  <FaInfoCircle className="text-4xl text-[#A37B5B]" />
+                </div>
+              </div>
+
+              {/* Title */}
+              <h2 className="text-2xl font-bold mb-3 text-[#7A5B4C]">
+                Please Take Note
+              </h2>
+
+              {/* Body */}
+              <p className="text-gray-700 mb-6 text-base leading-relaxed">
+                To ensure the proper attire for the baptism, we kindly suggest
+                wearing white or any shade of brown.
+              </p>
+              <p className="text-gray-700 mb-6 text-base leading-relaxed">
+                Also, If you will have any concerns or encounter a problem on
+                the date of the baptism, please inform us immediately so we can
+                be aware.
+              </p>
+
+              {/* Action Button */}
+              <button
+                onClick={() => setShowReminder(false)}
+                className="bg-[#A37B5B] text-white font-semibold px-6 py-2 rounded-xl shadow hover:bg-[#8B6447] transition"
+              >
+                Got it!
               </button>
             </motion.div>
           </motion.div>
